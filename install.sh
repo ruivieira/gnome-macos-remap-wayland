@@ -31,25 +31,13 @@ else
   exit 0
 fi
 
-# Download corresponding archive
-echo "INFO: Downloading the \"$ARCHIVE_NAME\"..."
-curl -s https://api.github.com/repos/k0kubun/xremap/releases/latest \
-| grep $ARCHIVE_NAME \
-| cut -d : -f 2,3 \
-| tr -d \" \
-| wget -qi -
-
-# Extract the archive and install binary to ~/.local/bin
-echo "INFO: Extracting the archive..."
-if ! command -v unzip &> /dev/null; then
-  echo "ERROR: Command \"unzip\" not found."
-  exit 0
-fi
-unzip -o ./xremap-linux-x86_64-*.zip
+# Install xRemap
+echo "INFO: Downloading the crate \"$ARCHIVE_NAME\"..."
+cargo install xremap --features gnome
 
 echo "INFO: Installing the binary..."
 # sudo systemctl stop gnome-macos-remap
-sudo cp ./xremap /usr/local/bin
+sudo cp ~/.cargo/bin/xremap /usr/local/bin
 
 # Tweaking server access control for X11 https://github.com/k0kubun/xremap#x11
 if [ "${XDG_SESSION_TYPE}" == "x11" ]; then
